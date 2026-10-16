@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHospital - Advanced DSA Interactive Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f4f7f6; color: #333; }
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { color: #0056b3; margin-bottom: 6px; }
+        .subtitle { color: #555; font-size: 1.05rem; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .module-section { margin-bottom: 30px; }
+        .module-title { font-size: 1.3rem; color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 6px; margin-bottom: 15px; }
+        .card { border: 1px solid #e2e8f0; padding: 18px; border-radius: 8px; margin-bottom: 15px; background: #fafafa; }
+        .card h3 { margin-top: 0; font-size: 1.1rem; color: #2c3e50; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        button { background-color: #0056b3; color: white; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        button:hover { background-color: #003d82; }
+        button.secondary { background-color: #2c3e50; }
+        button.secondary:hover { background-color: #1a252f; }
+        button.accent { background-color: #e65100; }
+        button.accent:hover { background-color: #bf360c; }
+        .result { margin-top: 12px; padding: 12px; background: #eef9ff; border-left: 4px solid #0056b3; font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; white-space: pre-wrap; overflow-x: auto; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; background: #e0f2fe; color: #0369a1; font-size: 0.75rem; font-weight: bold; margin-left: 6px; vertical-align: middle; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>SmartHospital Information System</h1>
+        <p class="subtitle">Complete High-Performance Healthcare Engine (Modules 1–7: CO1–CO6)</p>
+    </header>
+
+    <!-- MODULE 1: Strings -->
+    <div class="module-section">
+        <h2 class="module-title">Module 1: Strings (CO1) <span class="badge">KMP • Aho-Corasick</span></h2>
+        <div class="card">
+            <h3>1. KMP Disease Search</h3>
+            <input type="text" id="kmpText" value="PATIENT DIAGNOSIS: MYOCARDIAL INFARCTION DETECTED. CODE ICD-I21. CARDIOVASCULAR RISK HIGH.">
+            <input type="text" id="kmpPattern" value="INFARCTION">
+            <button onclick="runKmp()">Search Pattern (KMP)</button>
+            <div id="kmpResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODULE 2: Suffix Structures -->
+    <div class="module-section">
+        <h2 class="module-title">Module 2: Suffix Structures (CO2) <span class="badge">Suffix Array • Kasai LCP</span></h2>
+        <div class="card">
+            <h3>2. Longest Repeated Medical Phrase (Kasai LCP)</h3>
+            <input type="text" id="lcpText" value="DIABETES_MELLITUS_TYPE_2_DIABETES_MELLITUS_COMPLICATION">
+            <button onclick="runLcp()">Extract Repeated Phrase</button>
+            <div id="lcpResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODULE 3: Dynamic Programming -->
+    <div class="module-section">
+        <h2 class="module-title">Module 3: Dynamic Programming (CO3) <span class="badge">Levenshtein • Needleman-Wunsch • Bitmask DP</span></h2>
+        <div class="card">
+            <h3>3. Medical Typo Correction & DNA Sequence Alignment</h3>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="term1" value="Penicillin" style="flex:1;">
+                <input type="text" id="term2" value="Penicilin" style="flex:1;">
+            </div>
+            <div class="btn-group">
+                <button onclick="runTypo()">Calculate Edit Distance</button>
+                <button class="secondary" onclick="runDna()">Align Sample DNA (Needleman-Wunsch)</button>
+            </div>
+            <div id="m3Result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODULE 4: Network Flow -->
+    <div class="module-section">
+        <h2 class="module-title">Module 4: Network Flow (CO4) <span class="badge">Ford-Fulkerson • Edmonds-Karp • Dinic • Bipartite • König</span></h2>
+        <div class="card">
+            <h3>4. Medical Resource Logistics & Doctor-Case Assignment</h3>
+            <p>Compute max distribution of oxygen/beds, bottleneck cuts, and optimal specialist matching.</p>
+            <div class="btn-group">
+                <button onclick="runApi('/api/flow/ford-fulkerson', 'flowResult')">Run Ford-Fulkerson</button>
+                <button onclick="runApi('/api/flow/edmonds-karp', 'flowResult')">Run Edmonds-Karp (Min-Cut)</button>
+                <button onclick="runApi('/api/flow/dinic', 'flowResult')">Run Dinic Algorithm</button>
+                <button class="secondary" onclick="runApi('/api/flow/bipartite-matching', 'flowResult')">Doctor-Case Matching</button>
+                <button class="accent" onclick="runApi('/api/flow/konig', 'flowResult')">König's Theorem Cover</button>
+            </div>
+            <div id="flowResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODULE 5: NP-Completeness & Approximation -->
+    <div class="module-section">
+        <h2 class="module-title">Module 5: NP-Completeness & Approximation (CO5) <span class="badge">3-SAT DPLL • Clique • Vertex Cover 2-Approx</span></h2>
+        <div class="card">
+            <h3>5. Treatment Constraint Satisfaction & Hospital Conflict Cover</h3>
+            <p>DPLL Boolean satisfiability for medical drug rules and Karp reduction chain.</p>
+            <div class="btn-group">
+                <button onclick="runApi('/api/np/sat', 'npResult')">Solve 3-SAT Protocol (DPLL)</button>
+                <button onclick="runApi('/api/np/clique-reduction', 'npResult')">3-SAT → CLIQUE Reduction</button>
+                <button class="secondary" onclick="runApi('/api/np/karp-reductions', 'npResult')">Karp Reduction Chain</button>
+                <button class="accent" onclick="runApi('/api/np/vertex-cover-approx', 'npResult')">Vertex Cover 2-Approximation</button>
+            </div>
+            <div id="npResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODULE 6: Randomized Algorithms -->
+    <div class="module-section">
+        <h2 class="module-title">Module 6: Randomized Algorithms (CO6) <span class="badge">Randomized QuickSort • Reservoir Sampling • Miller-Rabin</span></h2>
+        <div class="card">
+            <h3>6. Urgency Triage Ranking, Sensor Sampling & Prime Verification</h3>
+            <div class="btn-group">
+                <button onclick="runApi('/api/randomized/quicksort', 'randResult')">Randomized QuickSort (Triage)</button>
+                <button onclick="runApi('/api/randomized/reservoir-sample?k=3', 'randResult')">Reservoir Sampling (ICU Telemetry)</button>
+                <button class="secondary" onclick="runApi('/api/randomized/miller-rabin?number=1000000007', 'randResult')">Miller-Rabin Primality Test</button>
+            </div>
+            <div id="randResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MODULE 7: Parallel Algorithms & Analytics -->
+    <div class="module-section">
+        <h2 class="module-title">Module 7: Parallel Algorithms & Analytics (CO6) <span class="badge">Blelloch Scan • Parallel Reduce • Brent's Theorem</span></h2>
+        <div class="card">
+            <h3>7. Work-Efficient Prefix Scan, ForkJoin Reduction & Brent's Lemma</h3>
+            <div class="btn-group">
+                <button onclick="runApi('/api/parallel/blelloch-scan', 'parResult')">Blelloch Parallel Scan</button>
+                <button onclick="runApi('/api/parallel/reduce?size=2000', 'parResult')">Parallel Reduce (ForkJoin)</button>
+                <button class="secondary" onclick="runApi('/api/parallel/brents-theorem?records=10000', 'parResult')">Brent's Theorem Scaling Model</button>
+            </div>
+            <div id="parResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function runKmp() {
+        const text = encodeURIComponent(document.getElementById('kmpText').value);
+        const pattern = encodeURIComponent(document.getElementById('kmpPattern').value);
+        const res = await fetch(`/api/search/kmp?text=${text}&pattern=${pattern}`);
+        const data = await res.json();
+        showResult('kmpResult', data);
+    }
+
+    async function runLcp() {
+        const text = encodeURIComponent(document.getElementById('lcpText').value);
+        const res = await fetch(`/api/suffix/lcp?text=${text}`);
+        const data = await res.json();
+        showResult('lcpResult', data);
+    }
+
+    async function runTypo() {
+        const t1 = encodeURIComponent(document.getElementById('term1').value);
+        const t2 = encodeURIComponent(document.getElementById('term2').value);
+        const res = await fetch(`/api/typo/levenshtein?term1=${t1}&term2=${t2}`);
+        const data = await res.json();
+        showResult('m3Result', data);
+    }
+
+    async function runDna() {
+        const res = await fetch(`/api/dna/align?seq1=AGTCGAT&seq2=AGCGAT`);
+        const data = await res.json();
+        showResult('m3Result', data);
+    }
+
+    async function runApi(url, targetElementId) {
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            showResult(targetElementId, data);
+        } catch (err) {
+            showResult(targetElementId, { error: err.message });
+        }
+    }
+
+    function showResult(elementId, data) {
+        const div = document.getElementById(elementId);
+        div.style.display = 'block';
+        div.textContent = JSON.stringify(data, null, 2);
+    }
+</script>
+</body>
+</html>
